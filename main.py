@@ -42,12 +42,14 @@ def four_year_students(student_id, dep):
         student_grades = student_data.iloc[:, :]
 
         grades = []
+        grades_labels = []
         for grade in student_grades:
             grades.append(student_grades.loc[0, :][grade])
+            grades_labels.append(grade)
 
         gpa = gpa_calc(grades)
 
-        return gpa
+        return gpa,grades,grades_labels
 
     except:
 
@@ -80,12 +82,14 @@ def third_year_students(student_id, dep):
         student_grades = student_data.iloc[:, :]
 
         grades = []
+        grades_labels = []
         for grade in student_grades:
             grades.append(student_grades.loc[0, :][grade])
+            grades_labels.append(grade)
 
         gpa = gpa_calc(grades)
 
-        return gpa
+        return gpa, grades, grades_labels
 
     except:
 
@@ -112,12 +116,14 @@ def second_year_students(student_id, dep):
         student_grades = student_data.iloc[:, :]
 
         grades = []
+        grades_labels = []
         for grade in student_grades:
             grades.append(student_grades.loc[0, :][grade])
+            grades_labels.append(grade)
 
         gpa = gpa_calc(grades)
 
-        return gpa
+        return gpa, grades, grades_labels
 
     except:
 
@@ -143,13 +149,14 @@ def first_year_students(student_id, dep):
         student_grades = student_data.iloc[:, :]
 
         grades = []
+        grades_labels = []
         for grade in student_grades:
             grades.append(student_grades.loc[0, :][grade])
+            grades_labels.append(grade)
 
         gpa = gpa_calc(grades)
 
-        return gpa
-
+        return gpa, grades, grades_labels
     except:
 
         return print("some thing went wrong at first year")
@@ -160,18 +167,18 @@ def make_stats(student_id, year, dep):
     try:
         gpa = 0
         if year == 4:
-            gpa = four_year_students(student_id, dep)
+            gpa,grades,grades_labels = four_year_students(student_id, dep)
 
         elif year == 3:
-            gpa = third_year_students(student_id, dep)
+            gpa,grades,grades_labels = third_year_students(student_id, dep)
 
         elif year == 2:
-            gpa = second_year_students(student_id, dep)
+            gpa,grades,grades_labels = second_year_students(student_id, dep)
 
         else:
-            gpa = first_year_students(student_id, dep)
+            gpa,grades,grades_labels = first_year_students(student_id, dep)
 
-        return gpa
+        return gpa,grades,grades_labels
 
     except:
         return print("something is wrong with the year")
@@ -186,9 +193,10 @@ def ret_stats():
     year = int(userinp['year'])
     dep = userinp['dep']
 
-    student_gpa = make_stats(id, year, dep)
+    student_gpa,student_grades,student_labels = make_stats(id, year, dep)
     student_gpa = str(student_gpa)
-    return jsonify({"GPA": "Student GPA = " + student_gpa})
+
+    return jsonify({"GPA": student_gpa,"LABELS":student_labels,"GRADES":student_grades})
 
 
 @app.route('/')
